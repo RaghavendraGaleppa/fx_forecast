@@ -16,7 +16,7 @@ def load_model_from_checkpoint(checkpoint_path):
             checkpoint_path,
             window_size=window_size,
             label_size=label_size
-        )
+        ).double()
 
         return model, window_size, label_size
     
