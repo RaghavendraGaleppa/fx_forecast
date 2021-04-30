@@ -61,7 +61,7 @@ class BasicLinearModel(pl.LightningModule):
         accuracy = self.accuracy_metric(x.clone(), logits, y)
         self.log('train_loss', loss)
         self.log('accuracy_score', accuracy)
-        return {'loss':loss, 'accuracy_score':accuracy
+        return {'loss':loss, 'accuracy_score':accuracy}
 
     def validation_step(self, val_batch, batch_idx):
         x, y = val_batch
@@ -70,7 +70,7 @@ class BasicLinearModel(pl.LightningModule):
         accuracy = self.accuracy_metric(x.clone(), logits, y)
         self.log('val_loss', loss)
         self.log('accuracy_score', accuracy)
-        return {'loss':loss, 'accuracy_score':accuracy
+        return {'loss':loss, 'accuracy_score':accuracy}
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters(), lr=1e-3)
