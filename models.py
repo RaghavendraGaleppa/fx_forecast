@@ -21,7 +21,7 @@ def load_model_from_checkpoint(checkpoint_path):
 
         return model, window_size, label_size
     
-    return None
+    return (None, window_size, label_size)
 
 
 class BasicLinearModel(pl.LightningModule):
