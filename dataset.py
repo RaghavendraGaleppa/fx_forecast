@@ -13,10 +13,9 @@ class ForexDataModule(pl.LightningDataModule):
         price_data, price_labels = tools.build_dataset(
             *self.filenames,
             window_size=self.window_size,
-            batch_size=self.batch_size,
             label_size=self.label_size
         )
-        self.train_loader, self.val_loader = tools.split_and_create_loaders(price_data, price_labels, BATCH_SIZE)
+        self.train_loader, self.val_loader = tools.split_and_create_loaders(price_data, price_labels, self.batch_size)
 
     def train_dataloader(self):
         return self.train_loader
