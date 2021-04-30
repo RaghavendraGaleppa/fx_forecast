@@ -69,3 +69,25 @@ def split_train_test(price_data, price_labels, split_pct=0.9):
     return (train_price_data, train_price_labels), (test_price_data, test_price_labels)
 
 
+class ForexDataset(Dataset):
+
+    def __init__(self, price_data, price_labels):
+        self.price_data = price_data.copy().transpose(0,2,1)
+        self.price_labels = price_labels.copy()
+
+    def __len__(self):
+        return len(self.price_data)
+
+    def __getitem__(self, idx):
+        return self.price_data[idx], self.price_labels[idx]
+
+def split_and_create_loaders(price_data, price_labels, batch_size=128):
+    
+    (train_price_data, train_price_labels), (test_price_data, test_price_labels) = split_train_test(price_data, price_labels)
+    train_dataset = ForexDataset(train_price_data, train_price_labels)
+    test_dataset = ForexDataset(test_price_data, test_price_labels)
+
+    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
+
+    return train_loader, test_loader
