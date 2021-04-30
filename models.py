@@ -50,6 +50,7 @@ class BasicLinearModel(pl.LightningModule):
         logits = self.forward(x)
         loss = self.mse_loss(logits, y)
         self.log('val_loss', loss)
+        return loss
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters(), lr=1e-3)
