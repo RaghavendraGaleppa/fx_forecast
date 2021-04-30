@@ -7,6 +7,8 @@ from sklearn.preprocessing import MinMaxScaler
 
 from tqdm import tqdm
 
+from torch.utils.data import Dataset, DataLoader
+
 def load_csv(filename, columns=None):
     df = pd.read_csv(filename)
     if columns:
