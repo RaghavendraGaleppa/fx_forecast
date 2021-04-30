@@ -83,7 +83,7 @@ class ForexDataset(Dataset):
         return len(self.price_data)
 
     def __getitem__(self, idx):
-        return torch.from_numpy(self.price_data[idx]).double(), torch.tensor(self.price_labels[idx]).double()
+        return torch.from_numpy(self.price_data[idx]).float(), torch.tensor(self.price_labels[idx]).float()
 
 def split_and_create_loaders(price_data, price_labels, batch_size=128):
     
