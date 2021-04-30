@@ -86,7 +86,7 @@ class DataStream():
             self.normalized_data = torch.from_numpy(self.normalized_data.reshape(1,1,-1))
 
             """ Predict the next price value """
-            out = self.model.predict(self.normalized_data)
+            out = self.model(self.normalized_data)
 
             if len(out.size()) > 1:
                 out = out.reshape(-1)
