@@ -4,6 +4,7 @@ from . import tools
 class ForexDataModule(pl.LightningDataModule):
     
     def __init__(self):
+        super().__init__()
         self.window_size = 7
         self.batch_size = 128
         self.label_size = 1
