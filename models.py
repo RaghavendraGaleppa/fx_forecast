@@ -20,10 +20,11 @@ class BasicLinearModel(pl.LightningModule):
             f"Epoch {self.trainer.current_epoch} training loss={self.trainer.progress_bar_dict['loss']}")
 
     def validation_epoch_end(self, outputs):
-        print(outputs)
+        loss_scores = [l['loss'] for l in outputs]
+        accuracy_scores = [a['accuracy_score'] for a in outputs]
 
-        loss = torch.stack(outputs['loss']).mean()
-        accuracy = np.mean(outputs['accuracy_scores'])
+        loss = torch.stack(loss_scores).mean()
+        accuracy = np.mean(accuracy_scores)
 
         self.trainer.progress_bar_callback.main_progress_bar.write(
             f"Epoch {self.trainer.current_epoch} "
