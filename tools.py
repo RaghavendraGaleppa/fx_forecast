@@ -43,7 +43,7 @@ def build_dataset(*filenames, **kwargs):
     for filename in filenames:
         data_df = load_csv(filename, columns=['date', 'time', 'start','high','low','end','UNK'])
         price_data , price_labels = create_dataset_custom_scaler(
-                    data_df.start,
+                    series=data_df.start,
                     window_size=kwargs.get('window_size', 7),
                     hop_size=kwargs.get('hop_size',1),
                     label_size=kwargs.get('label_size',1)
