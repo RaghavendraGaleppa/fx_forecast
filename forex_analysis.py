@@ -72,7 +72,7 @@ class DataStream():
         self.raw_data_queue.append(price_data['final_price'])
 
         """ Log information """
-        self.logger.debug(f"Timestamp:{self.last_timestamp}, Price: {price}"
+        self.logger.debug(f"Timestamp:{self.last_timestamp}, Price: {price_data['final_price']}"
                             f", queue length: {len(self.raw_data_queue)}")
 
         if len(self.raw_data_queue) == self.window_size:
