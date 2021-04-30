@@ -12,7 +12,8 @@ class BasicLinearModel(pl.LightningModule):
         self.layer_2 = torch.nn.Linear(128, 256)
         self.layer_3 = torch.nn.Linear(256, label_size)
 
-    def on_epoch_start(self):
+    def on_epoch_end(self):
+        print("=================================================")
         print('\n')
 
     def forward(self, x):
