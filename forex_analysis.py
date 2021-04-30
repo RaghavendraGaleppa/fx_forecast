@@ -1,7 +1,7 @@
 import requests
 import torch
 import numpy as np
-from models import load_model_from_checkpoint
+from .models import load_model_from_checkpoint
 
 from sklearn.metrics import accuracy_score, mean_squared_error, mean_absolute_error
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
@@ -28,7 +28,6 @@ def get_eur_usd_price_data():
     return price_data
 
 class DataStream():
-
     def __init__(self, model_checkpoint_path):
 
 
