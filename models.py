@@ -23,6 +23,9 @@ class BasicLinearModel(pl.LightningModule):
         loss_scores = [l[0] for l in outputs]
         accuracy_scores = [o[1] for o in outputs]
 
+        print(f"Loss Scores: {loss_scores}")
+        print(f"Accuracy Scores: {accuracy_scores}")
+
         loss = torch.stack(loss_scores).mean()
         accuracy = np.mean(accuracy_scores)
 
