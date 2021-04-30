@@ -12,9 +12,14 @@ class BasicLinearModel(pl.LightningModule):
         self.layer_2 = torch.nn.Linear(128, 256)
         self.layer_3 = torch.nn.Linear(256, label_size)
 
-    def on_epoch_end(self):
-        print("=================================================")
-        print('\n')
+    def training_epoch_end(self, outputs):
+        self.trainer.progress_bar_callback.main_progress_bar.write(
+            f"Epoch {self.trainer.current_epoch} training loss={self.trainer.progress_bar_dict['loss']}")
+
+    def validation_epoch_end(self, outputs):
+        loss = torch.stack(outputs).mean()
+        self.trainer.progress_bar_callback.main_progress_bar.write(
+            f"Epoch {self.trainer.current_epoch} validation loss={loss.item()}")
 
     def forward(self, x):
         batch_size, window_size, features = x.size()
