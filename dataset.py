@@ -2,8 +2,8 @@ import pytorch_lightning as pl
 from . import tools
 
 class ForexDataModule(pl.LightningDataModule):
-
-    def prepare_data(self):
+    
+    def __init__(self):
         self.window_size = 7
         self.batch_size = 128
         self.label_size = 1
@@ -13,6 +13,8 @@ class ForexDataModule(pl.LightningDataModule):
             'fx_forecast/data/DAT_MT_EURUSD_M1_202102.csv',  
             'fx_forecast/data/DAT_MT_EURUSD_M1_202103.csv',  
             'fx_forecast/data/DAT_MT_EURUSD_M1_202104.csv',]
+
+    def prepare_data(self):
 
         price_data, price_labels = tools.build_dataset(
             *self.filenames,
