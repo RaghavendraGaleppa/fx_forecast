@@ -3,6 +3,7 @@ from torch.nn import functional as F
 import pytorch_lightning as pl
 
 from sklearn.metrics import accuracy_score
+import numpy as np
 
 
 class BasicLinearModel(pl.LightningModule):
@@ -19,12 +20,16 @@ class BasicLinearModel(pl.LightningModule):
             f"Epoch {self.trainer.current_epoch} training loss={self.trainer.progress_bar_dict['loss']}")
 
     def validation_epoch_end(self, outputs):
-        print(outputs)
-        loss = outputs[0]
-        loss = torch.stack(loss).mean()
-        accuracy = outputs[1]
+        loss_scores = [l[0] for l in outputs]
+        accuracy_scores = [o[1] for o in outputs]
+
+        loss = torch.stack(loss_scores).mean()
+        accuracy = np.mean(accuracy_scores)
+
         self.trainer.progress_bar_callback.main_progress_bar.write(
-            f"Epoch {self.trainer.current_epoch} validation_loss={loss.item()} validation_accuracy={accuracy}")
+            f"Epoch {self.trainer.current_epoch} "
+            f"validation_loss={loss.item()} "
+            f"validation_accuracy={accuracy}")
 
     def forward(self, x):
         batch_size, window_size, features = x.size()
