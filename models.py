@@ -10,7 +10,6 @@ def load_model_from_checkpoint(checkpoint_path):
     model_name = model_config[0]
     window_size = int(model_config[1])
     label_size = int(model_config[2])
-    print(model_config)
 
     if model_name == 'BaseLinearModel':
         model = BasicLinearModel.load_from_checkpoint(
