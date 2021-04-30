@@ -152,8 +152,8 @@ class DataStream():
                     self.logger.debug("\n")
 
                 else:
-                    # self.logger.debug(
-                    #     f"Time Left for next Update: {time.time() - self.last_timestamp}")
+                    self.logger.debug(
+                        f"Time Left for next Update: {time.time() - self.last_timestamp}")
                     time.sleep(1)
 
 
