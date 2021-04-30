@@ -5,6 +5,23 @@ import pytorch_lightning as pl
 from sklearn.metrics import accuracy_score
 import numpy as np
 
+def load_model_from_checkpoint(checkpoint_path):
+    model_config = checkpoint_path.split('/')[-1].split('_')
+    model_name = model_config[0]
+    window_size = int(model_config[1])
+    label_size = int(model_config[2])
+
+    if model_name == 'BaseLinearModel':
+        model = BasicLinearModel.load_from_checkpoint(
+            checkpoint_path,
+            window_size=window_size,
+            label_size=label_size
+        )
+
+        return model, window_size, label_size
+    
+    return None
+
 
 class BasicLinearModel(pl.LightningModule):
 
