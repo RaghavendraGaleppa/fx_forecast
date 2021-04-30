@@ -2,11 +2,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 
 from tqdm import tqdm
 
+import torch
 from torch.utils.data import Dataset, DataLoader
 
 def load_csv(filename, columns=None):
