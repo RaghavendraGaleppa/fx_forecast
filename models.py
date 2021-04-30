@@ -3,7 +3,7 @@ from torch.nn import functional as F
 import pytorch_lightning as pl
 
 
-class BasicLinerModel(pl.LightningModule):
+class BasicLinearModel(pl.LightningModule):
 
     def __init__(self, window_size, label_size):
         super().__init__()
