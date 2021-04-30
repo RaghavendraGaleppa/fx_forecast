@@ -12,6 +12,9 @@ class BasicLinearModel(pl.LightningModule):
         self.layer_2 = torch.nn.Linear(128, 256)
         self.layer_3 = torch.nn.Linear(256, label_size)
 
+    def on_epoch_start(self):
+        print('\n')
+
     def forward(self, x):
         batch_size, window_size, features = x.size()
 
