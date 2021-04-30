@@ -62,18 +62,18 @@ class BasicLinearModel(pl.LightningModule):
         x, y = train_batch
         logits = self.forward(x)
         loss = self.mse_loss(logits, y)
-        accuracy = self.accuracy_metric(x, logits, y)
+        #accuracy = self.accuracy_metric(x, logits, y)
         self.log('train_loss', loss)
-        self.log('accuracy_score', accuracy)
+        #self.log('accuracy_score', accuracy)
         return loss, accuracy
 
     def validation_step(self, val_batch, batch_idx):
         x, y = val_batch
         logits = self.forward(x)
         loss = self.mse_loss(logits, y)
-        accuracy = self.accuracy_metric(x, logits, y)
+        #accuracy = self.accuracy_metric(x, logits, y)
         self.log('val_loss', loss)
-        self.log('accuracy_score', accuracy)
+        #self.log('accuracy_score', accuracy)
         return loss, accuracy
 
     def configure_optimizers(self):
