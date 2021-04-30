@@ -28,9 +28,7 @@ class BasicLinearModel(pl.LightningModule):
         return x
 
     def mse_loss(self, logits, labels):
-        print(logits.shape)
-        print(labels.shape)
-        return F.mse_loss(logits, labels)
+        return F.mse_loss(logits.view(-1), labels)
 
     def training_step(self, train_batch, batch_idx):
         x, y = train_batch
