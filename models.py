@@ -20,19 +20,19 @@ class BasicLinearModel(pl.LightningModule):
             f"Epoch {self.trainer.current_epoch} training loss={self.trainer.progress_bar_dict['loss']}")
 
     def validation_epoch_end(self, outputs):
-        #loss_scores = [l[0] for l in outputs]
-        #accuracy_scores = [o[1] for o in outputs]
+        loss_scores = [l[0] for l in outputs]
+        accuracy_scores = [o[1] for o in outputs]
 
-        #print(f"Loss Scores: {loss_scores}")
-        #print(f"Accuracy Scores: {accuracy_scores}")
+        print(f"Loss Scores: {loss_scores}")
+        print(f"Accuracy Scores: {accuracy_scores}")
 
         loss = torch.stack(outputs).mean()
-        #accuracy = np.mean(accuracy_scores)
+        accuracy = np.mean(accuracy_scores)
 
         self.trainer.progress_bar_callback.main_progress_bar.write(
             f"Epoch {self.trainer.current_epoch} "
             f"validation_loss={loss.item()} "
-            #f"validation_accuracy={accuracy}"
+            f"validation_accuracy={accuracy}"
         )
 
     def forward(self, x):
@@ -63,18 +63,18 @@ class BasicLinearModel(pl.LightningModule):
         x, y = train_batch
         logits = self.forward(x)
         loss = self.mse_loss(logits, y)
-        #accuracy = self.accuracy_metric(x, logits, y)
+        accuracy = self.accuracy_metric(x.clone(), logits, y)
         self.log('train_loss', loss)
-        #self.log('accuracy_score', accuracy)
+        self.log('accuracy_score', accuracy)
         return loss
 
     def validation_step(self, val_batch, batch_idx):
         x, y = val_batch
         logits = self.forward(x)
         loss = self.mse_loss(logits, y)
-        #accuracy = self.accuracy_metric(x, logits, y)
+        accuracy = self.accuracy_metric(x.clone(), logits, y)
         self.log('val_loss', loss)
-        #self.log('accuracy_score', accuracy)
+        self.log('accuracy_score', accuracy)
         return loss
 
     def configure_optimizers(self):
