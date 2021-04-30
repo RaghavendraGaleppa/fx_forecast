@@ -62,7 +62,7 @@ class BasicLinearModel(pl.LightningModule):
         x, y = train_batch
         logits = self.forward(x)
         loss = self.mse_loss(logits, y)
-        accuracy = self.accuracy_metric(x.detach().cpu().clone(), logits, loss)
+        accuracy = self.accuracy_metric(x, logits, y)
         self.log('train_loss', loss)
         self.log('accuracy_score', accuracy)
         return loss, accuracy
@@ -71,7 +71,7 @@ class BasicLinearModel(pl.LightningModule):
         x, y = val_batch
         logits = self.forward(x)
         loss = self.mse_loss(logits, y)
-        accuracy = self.accuracy_metric(x.detach().cpu().clone(), logits, loss)
+        accuracy = self.accuracy_metric(x, logits, y)
         self.log('val_loss', loss)
         self.log('accuracy_score', accuracy)
         return loss, accuracy
