@@ -66,6 +66,6 @@ def split_train_test(price_data, price_labels, split_pct=0.9):
     print(f"Train data shape: {train_price_data.shape}, {train_price_labels.shape}")
     print(f"Test data shape: {test_price_data.shape}, {test_price_labels.shape}")
 
-    return (train_price_data, train_price_labels_), (test_price_data, test_price_labels)
+    return (train_price_data, train_price_labels), (test_price_data, test_price_labels)
 
 
