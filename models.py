@@ -2,7 +2,7 @@ import torch
 from torch.nn import functional as F
 import pytorch_lightning as pl
 
-from sklear.metrics import accuracy_score
+from sklearn.metrics import accuracy_score
 
 
 class BasicLinearModel(pl.LightningModule):
