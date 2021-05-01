@@ -71,8 +71,7 @@ class BasicLinearModel(pl.LightningModule):
         pred = []
         real = []
         for i in range(len(x)):
-            if logits[i] > x[i].reshape(-1)[-1]:
-                print(logits[i], x[i])
+            if logits[i][0] > x[i].reshape(-1)[-1]:
                 pred.append(0)
             else:
                 pred.append(1)
