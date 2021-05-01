@@ -47,8 +47,8 @@ def get_accuracy_score(inp, model, window_size, label_size):
         prices.append(inp.start.iloc[i])
 
         if len(prices) == window_size+1:
-            scaler = MinMaxScaler()
-            ndarray = scaler.fit_transform(np.array([list(prices)[:-1]]), feature_range=(0.1,0.9))
+            scaler = MinMaxScaler(feature_range=(0.1,0.9))
+            ndarray = scaler.fit_transform(np.array([list(prices)[:-1]]))
             print(ndarray)
             tensor = torch.tensor(ndarray.reshape(1,1,window_size))
             out = model(tensor)
