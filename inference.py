@@ -63,7 +63,7 @@ def get_accuracy_score(inp, model, window_size, label_size):
             if not _date in accuracy_dict:
                 accuracy_dict[_date] = {}
 
-            if not _time in accuracy_dict[_date][_time]:
+            if not _time in accuracy_dict[_date]:
                 accuracy_dict[_date][_time] = {'real':[], 'pred':[]}
 
 
