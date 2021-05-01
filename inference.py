@@ -60,7 +60,7 @@ def get_accuracy_score(inp, model, window_size, label_size):
             _time = inp.time.iloc[i].split(':')[0]
 
 
-            if not _date in accuract_dict:
+            if not _date in accuracy_dict:
                 accuracy_dict[_date] = {}
 
             if not _time in accuracy_dict[_date][_time]:
