@@ -70,7 +70,7 @@ def get_accuracy_score(inp, model, window_size, label_size):
             if not type(pred_rescale_value) is int:
                 pred_rescale_value = pred_rescale_value[0]
             
-            if pred_rescale_value < prices[-2]
+            if pred_rescale_value < prices[-2]:
                 accuracy_dict[_date][_time]['pred'].append(0)
             else:
                 accuracy_dict[_date][_time]['pred'].append(1)
