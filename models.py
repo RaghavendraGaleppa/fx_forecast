@@ -68,8 +68,8 @@ class BasicLinearModel(pl.LightningModule):
         return F.mse_loss(logits.view(-1), labels)
 
     def accuracy_metric(self, x, logits, labels):
-        pred = x.squeeze()[:,-1].reshape(-1) < logits.numpy().reshape(-1)
-        real = x.squeeze()[:,-1].reshape(-1) < labels.numpy().reshape(-1)
+        pred = x.squeeze()[:,-1].reshape(-1).numpy() < logits.numpy().reshape(-1)
+        real = x.squeeze()[:,-1].reshape(-1).numpy() < labels.numpy().reshape(-1)
         
         return accuracy_score(y_true=real, y_pred=pred)
 
