@@ -3,7 +3,7 @@ import numpy as np
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import MinMaxScaler
 import torch
-from tqmd import tqdm
+from tqdm import tqdm
 
 def accuracy_stats(accuracy_dict):
     time_wise_accuracy = {}
