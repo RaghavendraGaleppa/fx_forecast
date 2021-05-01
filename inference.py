@@ -54,7 +54,7 @@ def get_accuracy_score(inp, model, window_size, label_size):
             out = model(tensor)
             pred_price = out.cpu().detach()
 
-            pred_rescale_value = scaler.inverse_transform(pred_price.reshape(1,1)).reshape[-1]
+            pred_rescale_value = scaler.inverse_transform(pred_price.reshape(1,1)).reshape(-1)
 
             _date = inp.date.iloc[i]
             _time = inp.time.iloc[i].split(':')[0]
