@@ -79,3 +79,4 @@ def get_accuracy_score(inp, model, window_size, label_size):
             else:
                 accuracy_dict[_date][_time]['real'].append(1)
 
+    return accuracy_dict
