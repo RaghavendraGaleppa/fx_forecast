@@ -37,9 +37,15 @@ class ForexDataSimulation():
         self.window_size = window_size
         self.label_size = label_size
         self.idx = 0
+
+    def reset(self):
+        self.idx = 0
         
     def get_next_price(self):
-        return {'timestamp': int(time.time()), 'final_price': self.df.start.iloc[self.idx]}
+
+        data = {'timestamp': int(time.time()), 'final_price': self.df.start.iloc[self.idx]}
+        self.idx += 1
+        return data
      
 class DataStream():
     def __init__(self, model_checkpoint_path, simulation=None):
