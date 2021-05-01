@@ -68,8 +68,9 @@ class BasicLinearModel(pl.LightningModule):
         return F.mse_loss(logits.view(-1), labels)
 
     def accuracy_metric(self, x, logits, labels):
-        y_pred = x.view(x.shape[0],-1)[:,-1].view(-1) < logits.view(-1)
-        y_true = x.view(x.shape[0],-1)[:,-1].view(-1) < labels.view(-1)
+        d = x.reshape(x.shape[0], -1)
+        y_pred = d[:,-1].reshape(-1) < logits.reshape(-1)
+        y_true = d[:,-1].reshape(-1) < labels.reshape(-1)
         return accuracy_score(y_true=y_true, y_pred=y_pred)
 
 
@@ -77,7 +78,7 @@ class BasicLinearModel(pl.LightningModule):
         x, y = train_batch
         logits = self.forward(x)
         loss = self.mse_loss(logits, y)
-        accuracy = self.accuracy_metric(x, logits, y)
+        accuracy = self.accuracy_metric(x, logits.cpu().detach(), y)
         self.log('train_loss', loss)
         self.log('accuracy_score', accuracy)
         return {'loss':loss, 'accuracy_score':accuracy}
