@@ -68,21 +68,9 @@ class BasicLinearModel(pl.LightningModule):
         return F.mse_loss(logits.view(-1), labels)
 
     def accuracy_metric(self, x, logits, labels):
-        pred = []
-        real = []
-        for i in range(len(x)):
-            print(logits[i].shape, labels[i].shape)
-            print(logits[i][0].item(), labels[i].item())
-            if logits[i][0] > x[i].reshape(-1)[-1]:
-                pred.append(0)
-            else:
-                pred.append(1)
-
-            if labels[i] > x[i].reshape(-1)[-1]:
-                real.append(0)
-            else:
-                real.append(1)
-
+        pred = x.squeeze()[:,-1].reshape(-1) < logits.numpy().reshape(-1)
+        real = x.squeeze()[:,-1].reshape(-1) < labels.numpy().reshape(-1)
+        
         return accuracy_score(y_true=real, y_pred=pred)
 
 
@@ -90,8 +78,7 @@ class BasicLinearModel(pl.LightningModule):
         x, y = train_batch
         logits = self.forward(x)
         loss = self.mse_loss(logits, y)
-        #accuracy = self.accuracy_metric(x, logits.cpu().detach(), y)
-        accuracy = 0
+        accuracy = self.accuracy_metric(x, logits.cpu().detach(), y)
         self.log('train_loss', loss)
         self.log('accuracy_score', accuracy)
         return {'loss':loss, 'accuracy_score':accuracy}
@@ -100,7 +87,7 @@ class BasicLinearModel(pl.LightningModule):
         x, y = val_batch
         logits = self.forward(x)
         loss = self.mse_loss(logits, y)
-        accuracy = self.accuracy_metric(x, logits, y)
+        accuracy = self.accuracy_metric(x, logits.cpu().detach(), y)
         self.log('val_loss', loss)
         self.log('accuracy_score', accuracy)
         return {'loss':loss, 'accuracy_score':accuracy}
