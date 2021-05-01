@@ -68,10 +68,20 @@ class BasicLinearModel(pl.LightningModule):
         return F.mse_loss(logits.view(-1), labels)
 
     def accuracy_metric(self, x, logits, labels):
-        d = x.reshape(x.shape[0], -1)
-        y_pred = d[:,-1].reshape(-1) < logits.reshape(-1)
-        y_true = d[:,-1].reshape(-1) < labels.reshape(-1)
-        return accuracy_score(y_true=y_true, y_pred=y_pred)
+        pred = []
+        real = []
+        for i in range(len(x)):
+            if logits[i] > x[i].reshape(-1)[-1]:
+                pred.append(0)
+            else:
+                pred.append(1)
+
+            if labels[i] > x[i].reshape(-1)[-1]:
+                real.append(0)
+            else:
+                real.append(1)
+
+        return accuracy_score(y_true=real, y_pred=pred)
 
 
     def training_step(self, train_batch, batch_idx):
