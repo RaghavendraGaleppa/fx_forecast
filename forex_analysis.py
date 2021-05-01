@@ -1,6 +1,7 @@
 import requests
 import torch
 import numpy as np
+import pandas as pd
 from .models import load_model_from_checkpoint
 
 from sklearn.metrics import accuracy_score, mean_squared_error, mean_absolute_error
@@ -13,6 +14,8 @@ from collections import deque
 import time
 import logging
 import sys
+
+from tools import load_csv
 
 
 def get_eur_usd_price_data():
@@ -27,13 +30,26 @@ def get_eur_usd_price_data():
     price_data['final_price'] = (price_data['price_a'] + price_data['price_b'])/2
     return price_data
 
+class ForexDataSimulation():
+
+    def __init__(self, path_to_csv, window_size, label_size):
+        self.df = load_csv(path_to_csv)
+        self.window_size = window_size
+        self.label_size = label_size
+        self.idx = 0
+        
+    def get_next_price(self):
+        return {'timestamp': int(time.time()), 'final_price': self.df.start.iloc[self.idx]}
+     
 class DataStream():
-    def __init__(self, model_checkpoint_path):
+    def __init__(self, model_checkpoint_path, simulation=None):
 
 
         self.model, self.window_size, self.label_size = load_model_from_checkpoint(
-            checkpoint_path=model_checkpoint_path
+            checkpoint_path=model_checkpoint_path,
         )
+
+        self.simulation = simulation
 
         """ variables for data acquiring and storing """
         self.raw_data_queue = deque(maxlen=self.window_size)
@@ -60,7 +76,10 @@ class DataStream():
 
 
     def update_prices_data(self):
-        price_data = get_eur_usd_price_data()
+        if self.simulation:
+            price_data = self.simulation.get_next_price()
+        else:
+            price_data = get_eur_usd_price_data()
 
         if self.last_timestamp == price_data['timestamp']:
             self.logger.debug("Price not updated in the API")
@@ -127,7 +146,7 @@ class DataStream():
                                 f" {len(self.predicted_prices)} "
                                 f" till now: {accuracy}")
 
-    def start(self):
+    def start(self, time_interval=60):
         """ Reinitialize the queue everytime this system is started """
         self.raw_data_queue = deque(maxlen=self.window_size)
         self.last_timestamp = None
@@ -144,7 +163,7 @@ class DataStream():
                 self.logger.debug("\n")
             
             else:
-                if (int(time.time()) - self.last_timestamp) >= 60.0:
+                if (int(time.time()) - self.last_timestamp) >= time_interval:
                     self.logger.debug("\n")
                     self.logger.debug("="*80)
                     self.update_prices_data()
@@ -153,7 +172,7 @@ class DataStream():
 
                 else:
                     self.logger.debug(
-                        f"Time Left for next Update: {time.time() - self.last_timestamp}")
+                        f"Time Since last Update: {time.time() - self.last_timestamp}")
                     time.sleep(1)
 
 

@@ -11,7 +11,7 @@ from tqdm import tqdm
 import torch
 from torch.utils.data import Dataset, DataLoader
 
-def load_csv(filename, columns=None):
+def load_csv(filename, columns=['date', 'time', 'start','high','low','end','UNK']):
     df = pd.read_csv(filename)
     if columns:
         df.columns = columns
