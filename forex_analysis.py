@@ -117,7 +117,7 @@ class DataStream():
                 out = out.reshape(-1)
 
             """ Update the prices """
-            predicted_price_inverse = scaler.inverse_transform(out.item())
+            predicted_price_inverse = scaler.inverse_transform(out.reshape(-1,1))
             self.predicted_prices.append(predicted_price_inverse[0][0])
             self.actual_prices.append(self.raw_data_queue[-1])
 
