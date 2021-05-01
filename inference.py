@@ -3,7 +3,7 @@ import numpy as np
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import MinMaxScaler
 import torch
-
+from tqmd import tqdm
 
 def accuracy_stats(accuracy_dict):
     time_wise_accuracy = {}
@@ -11,7 +11,7 @@ def accuracy_stats(accuracy_dict):
     day_wise_accuracy = {}
     time_wise_accuracy = {}
     mean_time_wise_accuracy = {}
-    for day in accuracy_dict.keys():
+    for day in tqdm(accuracy_dict.keys()):
         day_time_wise_accuracy[day] = {}
         today_accuracies = []
         for time in accuracy_dict[day]:
@@ -36,7 +36,6 @@ def accuracy_stats(accuracy_dict):
             }
 
 
-
 def get_accuracy_score(inp, model, window_size, label_size):
     """
         inp should be a DataFrame
@@ -44,7 +43,7 @@ def get_accuracy_score(inp, model, window_size, label_size):
     prices = deque(maxlen=window_size+1)
     accuracy_dict = {}
 
-    for i in range(len(inp)):
+    for i in tqdm(range(len(inp))):
         prices.append(inp.start.iloc[i])
 
         if len(prices) == window_size+1:
