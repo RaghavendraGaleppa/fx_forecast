@@ -72,6 +72,7 @@ class BasicLinearModel(pl.LightningModule):
         real = []
         for i in range(len(x)):
             if logits[i] > x[i].reshape(-1)[-1]:
+                print(logits[i], x[i])
                 pred.append(0)
             else:
                 pred.append(1)
@@ -88,7 +89,8 @@ class BasicLinearModel(pl.LightningModule):
         x, y = train_batch
         logits = self.forward(x)
         loss = self.mse_loss(logits, y)
-        accuracy = self.accuracy_metric(x, logits.cpu().detach(), y)
+        #accuracy = self.accuracy_metric(x, logits.cpu().detach(), y)
+        accuracy = 0
         self.log('train_loss', loss)
         self.log('accuracy_score', accuracy)
         return {'loss':loss, 'accuracy_score':accuracy}
