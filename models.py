@@ -71,6 +71,8 @@ class BasicLinearModel(pl.LightningModule):
         pred = []
         real = []
         for i in range(len(x)):
+            print(x[i])
+            print(logits[i], labels[i])
             if x.squeeze()[i,-1].item() < logits[i][0].item():
                 pred.append(0)
             else:
