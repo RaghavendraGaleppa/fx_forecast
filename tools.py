@@ -35,7 +35,7 @@ def create_dataset_custom_scaler(series, window_size=5, hop_size=1, label_size=1
             next_price = prices[-1]
         else:
             next_price = new_data_df.labels.iloc[i:i+label_size]
-        price_data.append(prices[:-1])
+        price_data.append(prices[:-1].reshape(-1,1))
         price_labels.append(next_price)
 
     return np.array(price_data), np.array(price_labels)
