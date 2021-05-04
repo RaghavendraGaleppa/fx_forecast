@@ -134,7 +134,7 @@ class DataStream():
                 self.calculate_accuracy()
 
             elif self.model_type == 'keras':
-                pred = model.predict(self.normalized_data.reshape(1,-1,1))
+                pred = self.model.predict(self.normalized_data.reshape(1,-1,1))
                 self.predicted_prices.append(np.argmax(pred.reshape(-1)))
                 if len(self.predicted_prices) == 0:
                     self.predicted_prices.append(0)
