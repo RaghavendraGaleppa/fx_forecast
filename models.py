@@ -14,7 +14,7 @@ def load_model_from_checkpoint(checkpoint_path):
     
     if checkpoint_path.split('.')[-1] == 'pth':
         model_type = 'keras'
-        if model_name == 'cnn_lstm_model':
+        if model_name == 'CNNLSTMModel':
             model = cnn_lstm_model((window_size,1))
     else:
         model_type = 'torch'
