@@ -135,9 +135,10 @@ class DataStream():
 
             elif self.model_type == 'keras':
                 pred = self.model.predict(self.normalized_data.reshape(1,-1,1))
-                self.predicted_prices.append(np.argmax(pred.reshape(-1)))
                 if len(self.predicted_prices) == 0:
                     self.predicted_prices.append(0)
+                self.predicted_prices.append(np.argmax(pred.reshape(-1)))
+
                 if self.raw_data_queue[-1] > self.raw_data_queue[-2]:
                     self.actual_prices.append(0)
                 else:
