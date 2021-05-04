@@ -36,7 +36,7 @@ def accuracy_stats(accuracy_dict):
             }
 
 
-def get_accuracy_score(inp, model, window_size, label_size):
+def get_accuracy_score(inp, model, window_size, label_size, keras_model=True):
     """
         inp should be a DataFrame
     """
@@ -47,14 +47,6 @@ def get_accuracy_score(inp, model, window_size, label_size):
         prices.append(inp.start.iloc[i])
 
         if len(prices) == window_size+1:
-            scaler = MinMaxScaler(feature_range=(0.1,0.9))
-            ndarray = scaler.fit_transform(np.array([list(prices)[:-1]]).reshape(-1,1))
-            tensor = torch.tensor(ndarray.reshape(1,1,window_size))
-            out = model(tensor)
-            pred_price = out.cpu().detach()
-
-            pred_rescale_value = scaler.inverse_transform(pred_price.reshape(1,1)).reshape(-1)
-
             _date = inp.date.iloc[i]
             _time = inp.time.iloc[i].split(':')[0]
 
@@ -64,19 +56,35 @@ def get_accuracy_score(inp, model, window_size, label_size):
 
             if not _time in accuracy_dict[_date]:
                 accuracy_dict[_date][_time] = {'real':[], 'pred':[]}
-
-
-            if not type(pred_rescale_value) is int:
-                pred_rescale_value = pred_rescale_value[0]
-            
-            if pred_rescale_value < prices[-2]:
-                accuracy_dict[_date][_time]['pred'].append(0)
-            else:
-                accuracy_dict[_date][_time]['pred'].append(1)
                 
-            if prices[-1] < prices[-2]:
-                accuracy_dict[_date][_time]['real'].append(0)
+            scaler = MinMaxScaler(feature_range=(0.1,0.9))
+            ndarray = scaler.fit_transform(np.array([list(prices)[:-1]]).reshape(-1,1))
+            if keras_model is False:
+                tensor = torch.tensor(ndarray.reshape(1,1,window_size))
+                out = model(tensor)
+                pred_price = out.cpu().detach()
+
+                pred_rescale_value = scaler.inverse_transform(pred_price.reshape(1,1)).reshape(-1)
+                if not type(pred_rescale_value) is int:
+                    pred_rescale_value = pred_rescale_value[0]
+                
+                if pred_rescale_value < prices[-2]:
+                    accuracy_dict[_date][_time]['pred'].append(0)
+                else:
+                    accuracy_dict[_date][_time]['pred'].append(1)
+                    
+                if prices[-1] < prices[-2]:
+                    accuracy_dict[_date][_time]['real'].append(0)
+                else:
+                    accuracy_dict[_date][_time]['real'].append(1)
+
             else:
-                accuracy_dict[_date][_time]['real'].append(1)
+                out = model.predict(ndarray.reshape(1,-1,1))
+                label = np.argmax(out.reshape(-1))
+                accuracy_dict[_date][_time]['pred'].append(label)
+                if prices[-1] > prices[-2]:
+                    accuracy_dict[_date][_time]['real'].append(0)
+                else:
+                    accuracy_dict[_date][_time]['real'].append(1)
 
     return accuracy_dict
