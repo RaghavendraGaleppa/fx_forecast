@@ -149,10 +149,11 @@ class DataStream():
                 else:
                     self.logger.debug("Prediction: DOWN")
 
-                acc = accuracy_score(y_true=self.actual_prices, y_pred=self.predicted_prices)
-                self.logger.debug(f"Accuracte keras predictions for"
-                                    f" {len(self.predicted_prices)} "
-                                    f" till now: {acc}")
+                if len(self.actual_prices) >= 2:
+                    acc = accuracy_score(y_true=self.actual_prices[1:], y_pred=self.predicted_prices[1:len(self.actual_prices)])
+                    self.logger.debug(f"Accuracte keras predictions for"
+                                        f" {len(self.actual_prices)} "
+                                        f" till now: {acc}")
 
     def calculate_accuracy(self):
         if len(self.predicted_prices) > 1:
