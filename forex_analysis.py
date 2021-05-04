@@ -150,7 +150,7 @@ class DataStream():
                     self.logger.debug("Prediction: DOWN")
 
                 acc = accuracy_score(y_true=self.actual_prices, y_pred=self.predicted_prices)
-                self.logger.debug(f"Accuracte predictions for"
+                self.logger.debug(f"Accuracte keras predictions for"
                                     f" {len(self.predicted_prices)} "
                                     f" till now: {acc}")
 
