@@ -27,7 +27,7 @@ def create_dataset_custom_scaler(series, window_size=5, hop_size=1, label_size=1
     for i in tqdm(range(0, len(new_data_df)-window_size-1)):
         min_scale = np.random.uniform(0.05, 0.2, size=(1,))[0]
         max_scale = np.random.uniform(0.8, 0.95, size=(1,))[0]
-        custom_feature_range = (min_scale, max_scale)
+        custom_feature_range = (0.1, 0.9)
         scaler = MinMaxScaler(feature_range=custom_feature_range)
         prices = new_data_df.start.iloc[i:i+window_size+1].values.reshape(-1)
         prices = scaler.fit_transform(prices.reshape(-1,1))
