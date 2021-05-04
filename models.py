@@ -12,7 +12,7 @@ def load_model_from_checkpoint(checkpoint_path):
     window_size = int(model_config[1])
     label_size = int(model_config[2])
     
-    if checkpoint_path.split('.')[-1] == 'pth':
+    if checkpoint_path.split('.')[1] == 'pth':
         model_type = 'keras'
         if model_name == 'CNNLSTMModel':
             model = cnn_lstm_model((window_size,1))
