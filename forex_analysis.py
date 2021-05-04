@@ -144,6 +144,8 @@ class DataStream():
                 else:
                     self.actual_prices.append(1)
 
+                self.logger.debug(f"Inp: {self.normalized_data}")
+                self.logger.debug(f"Prediction: {pred}")
                 if np.argmax(pred.reshape(-1)) == 0:
                     self.logger.debug("Prediction: UP")
                 else:
