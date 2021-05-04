@@ -18,19 +18,34 @@ def load_csv(filename, columns=['date', 'time', 'start','high','low','end','UNK'
 
     return df
 
-def create_dataset_custom_scaler(series, window_size=5, hop_size=1, label_size=1, to_categorical=True):
+def create_dataset_custom_scaler(
+        series, 
+        window_size=5, 
+        hop_size=1, 
+        label_size=1, 
+        to_categorical=True,
+        normalize_values=True
+):
     series = series.iloc[list(range(0,len(series),hop_size))]
     new_data_df = pd.DataFrame(series)
     new_data_df['labels'] = new_data_df.shift(-window_size)
     price_data = []
     price_labels = []
     for i in tqdm(range(0, len(new_data_df)-window_size-1)):
-        min_scale = np.random.uniform(0.05, 0.2, size=(1,))[0]
-        max_scale = np.random.uniform(0.8, 0.95, size=(1,))[0]
-        custom_feature_range = (0.1, 0.9)
-        scaler = MinMaxScaler(feature_range=custom_feature_range)
+        # Choos the sequence of values
         prices = new_data_df.start.iloc[i:i+window_size+1].values.reshape(-1)
-        prices = scaler.fit_transform(prices.reshape(-1,1))
+
+        # Normalize the values based on the args
+        if normalize_values is True:
+            min_scale = np.random.uniform(0.05, 0.2, size=(1,))[0]
+            max_scale = np.random.uniform(0.8, 0.95, size=(1,))[0]
+            custom_feature_range = (0.1, 0.9)
+            scaler = MinMaxScaler(feature_range=custom_feature_range)
+            prices = scaler.fit_transform(prices.reshape(-1,1))
+        else:
+            prices = prices.reshape(-1,1)
+
+        # Convert the data to categorical based on the args
         if to_categorical is True:
             if prices.reshape(-1)[-1] > prices.reshape(-1)[-2]:
                 next_price = 0
@@ -41,6 +56,7 @@ def create_dataset_custom_scaler(series, window_size=5, hop_size=1, label_size=1
                 next_price = prices.reshape(-1)[-1]
             else:
                 next_price = new_data_df.labels.iloc[i:i+label_size]
+
         price_data.append(prices[:-1])
         price_labels.append(next_price)
 
