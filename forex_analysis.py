@@ -51,7 +51,7 @@ class DataStream():
     def __init__(self, model_checkpoint_path, simulation=None):
 
 
-        self.model, self.window_size, self.label_size = load_model_from_checkpoint(
+        self.model, self.window_size, self.label_size, self.model_type = load_model_from_checkpoint(
             checkpoint_path=model_checkpoint_path,
         )
 
@@ -108,31 +108,45 @@ class DataStream():
             """ Create a scaler and fit the raw data """
             scaler = MinMaxScaler(feature_range=(0.1,0.9))
             self.normalized_data = scaler.fit_transform(data_ndarray.reshape(-1,1)) 
-            self.normalized_data = torch.from_numpy(self.normalized_data.reshape(1,1,-1))
+            if self.model_type == 'torch':
+                self.normalized_data = torch.from_numpy(self.normalized_data.reshape(1,1,-1))
 
-            """ Predict the next price value """
-            pred = self.model(self.normalized_data)
-            out = pred.cpu().detach()
+                """ Predict the next price value """
+                pred = self.model(self.normalized_data)
+                out = pred.cpu().detach()
 
-            if len(out.size()) > 1:
-                out = out.reshape(-1)
+                if len(out.size()) > 1:
+                    out = out.reshape(-1)
 
-            """ Update the prices """
-            predicted_price_inverse = scaler.inverse_transform(out.reshape(-1,1))
-            self.predicted_prices.append(predicted_price_inverse[0][0])
-            self.actual_prices.append(self.raw_data_queue[-1])
+                """ Update the prices """
+                predicted_price_inverse = scaler.inverse_transform(out.reshape(-1,1))
+                self.predicted_prices.append(predicted_price_inverse[0][0])
+                self.actual_prices.append(self.raw_data_queue[-1])
 
-            """ Log out the predicted and last value """
-            self.logger.debug(f"Predicted_Price: {predicted_price_inverse[0][0]}"
-                                f", Last Price:{self.raw_data_queue[-1]}")
+                """ Log out the predicted and last value """
+                self.logger.debug(f"Predicted_Price: {predicted_price_inverse[0][0]}"
+                                    f", Last Price:{self.raw_data_queue[-1]}")
 
-            if predicted_price_inverse[0][0] > self.raw_data_queue[-1]:
-                self.logger.debug("Prediction: UP")
-            else:
-                self.logger.debug("Prediction: DOWN")
+                if predicted_price_inverse[0][0] > self.raw_data_queue[-1]:
+                    self.logger.debug("Prediction: UP")
+                else:
+                    self.logger.debug("Prediction: DOWN")
+                self.calculate_accuracy()
 
-            """ Calculate the accuracy of predictions till now """
-            self.calculate_accuracy()
+            elif self.model_type == 'keras':
+                pred = model.predict(self.normalized_data.reshape(1,-1,1))
+                self.predicted_prices.append(np.argmax(pred.reshape(-1))
+                if len(self.predicted_prices) == 0:
+                    self.predicted_prices.append(0)
+                if self.raw_data_queue[-1] > self.raw_data_queue[-2]:
+                    self.actual_prices.append(0)
+                else:
+                    self.actual_prices.append(1)
+
+                acc = accuracy_score(y_true=self.actual_prices, y_pred=self.predicted_prices)
+                self.logger.debug(f"Accuracte predictions for"
+                                    f" {len(self.predicted_prices)} "
+                                    f" till now: {acc}")
 
     def calculate_accuracy(self):
         if len(self.predicted_prices) > 1:

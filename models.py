@@ -6,23 +6,28 @@ from sklearn.metrics import accuracy_score
 import numpy as np
 
 def load_model_from_checkpoint(checkpoint_path):
+    model = None
     model_config = checkpoint_path.split('/')[-1].split('_')
     model_name = model_config[0]
     window_size = int(model_config[1])
     label_size = int(model_config[2])
-
-    if model_name == 'BaseLinearModel':
-        model = BasicLinearModel.load_from_checkpoint(
-            checkpoint_path,
-            window_size=window_size,
-            label_size=label_size
-        ).double()
-
-        return model, window_size, label_size
     
-    return (None, window_size, label_size)
+    if checkpoint_path.split('.')[-1] == 'pth':
+        model_type = 'keras'
+        if model_name == 'cnn_lstm_model':
+            model = cnn_lstm_model((window_size,1))
+    else:
+        model_type = 'torch'
 
+        if model_name == 'BaseLinearModel':
+            model = BasicLinearModel.load_from_checkpoint(
+                checkpoint_path,
+                window_size=window_size,
+                label_size=label_size
+            ).double()
 
+    return model, window_size, label_size, model_type
+        
 class BasicLinearModel(pl.LightningModule):
 
     def __init__(self, window_size, label_size):
@@ -178,5 +183,4 @@ def cnn_lstm_model(input_shape, num_classes=2):
     model.add(Dense(units=num_classes,activation='softmax'))
 
     #Model compilation	
-    model.compile(optimizer='adam',loss='categorical_crossentropy',metrics=['accuracy'])
     return model
