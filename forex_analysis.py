@@ -144,6 +144,11 @@ class DataStream():
                 else:
                     self.actual_prices.append(1)
 
+                if np.argmax(pred.reshape(-1)) == 0:
+                    self.logger.debug("Prediction: UP")
+                else:
+                    self.logger.debug("Prediction: DOWN")
+
                 acc = accuracy_score(y_true=self.actual_prices, y_pred=self.predicted_prices)
                 self.logger.debug(f"Accuracte predictions for"
                                     f" {len(self.predicted_prices)} "
