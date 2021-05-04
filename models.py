@@ -170,7 +170,7 @@ def cnn_lstm_model(input_shape, num_classes=2):
     model.add(Conv1D(filters=64, kernel_size = 3, strides=1,padding='same'))
     model.add(BatchNormalization())
     model.add(Activation('elu'))
-    model.add(MaxPooling1D(pool_size = 2, strides = 1))
+    model.add(MaxPooling1D(pool_size = 2, strides = 2))
 
     model.add(LSTM(units=64, activation='relu')) 
             
