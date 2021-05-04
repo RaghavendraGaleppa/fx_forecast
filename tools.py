@@ -18,7 +18,7 @@ def load_csv(filename, columns=['date', 'time', 'start','high','low','end','UNK'
 
     return df
 
-def create_dataset_custom_scaler(series, window_size=5, hop_size=1, label_size=1):
+def create_dataset_custom_scaler(series, window_size=5, hop_size=1, label_size=1, to_categorical=True):
     series = series.iloc[list(range(0,len(series),hop_size))]
     new_data_df = pd.DataFrame(series)
     new_data_df['labels'] = new_data_df.shift(-window_size)
@@ -31,10 +31,16 @@ def create_dataset_custom_scaler(series, window_size=5, hop_size=1, label_size=1
         scaler = MinMaxScaler(feature_range=custom_feature_range)
         prices = new_data_df.start.iloc[i:i+window_size+1].values.reshape(-1)
         prices = scaler.fit_transform(prices.reshape(-1,1))
-        if label_size == 1:
-            next_price = prices.reshape(-1)[-1]
+        if to_categorical is True:
+            if prices.reshape(-1)[-1] > prices.reshape(-1)[-2]:
+                next_price = 0
+            else:
+                next_price = 1
         else:
-            next_price = new_data_df.labels.iloc[i:i+label_size]
+            if label_size == 1:
+                next_price = prices.reshape(-1)[-1]
+            else:
+                next_price = new_data_df.labels.iloc[i:i+label_size]
         price_data.append(prices[:-1])
         price_labels.append(next_price)
 

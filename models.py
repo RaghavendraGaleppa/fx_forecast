@@ -110,5 +110,59 @@ class BasicLinearModel(pl.LightningModule):
         return optimizer
 
 
+class CNNLSTMModel(pl.LightningModule):
+
+    def __init__(self):
+
+        super().__init__()
+
+    def forward(self, x):
+        pass
 
 
+from keras.models import Model,Sequential
+from keras import optimizers
+from keras.utils import to_categorical
+import keras.backend as K
+from keras.callbacks import EarlyStopping
+from keras.callbacks import ModelCheckpoint
+from keras.layers import Input,Conv1D,BatchNormalization,MaxPooling1D,LSTM,Dense,Activation,Layer
+
+def emo1d(input_shape, num_classes,args):
+	
+	model = Sequential(name='Emo1D')
+	
+	# LFLB1
+	model.add(Conv1D(filters = 64,kernel_size = (3),strides=1,padding='same',data_format='channels_last',input_shape=input_shape))	
+	model.add(BatchNormalization())
+	model.add(Activation('elu'))
+	model.add(MaxPooling1D(pool_size = 2, strides = 1))
+
+	#LFLB2
+	model.add(Conv1D(filters=64, kernel_size = 3, strides=1,padding='same'))
+	model.add(BatchNormalization())
+	model.add(Activation('elu'))
+	model.add(MaxPooling1D(pool_size = 2, strides = 1))
+
+	#LFLB3
+	model.add(Conv1D(filters=128, kernel_size = 3, strides=1,padding='same'))
+	model.add(BatchNormalization())
+	model.add(Activation('elu'))
+	model.add(MaxPooling1D(pool_size = 2, strides = 1))
+
+	#LFLB4
+	model.add(Conv1D(filters=128, kernel_size = 3, strides=1,padding='same'))
+	model.add(BatchNormalization())
+	model.add(Activation('elu'))
+	model.add(MaxPooling1D(pool_size = 2, strides = 1))
+
+	#LSTM
+	model.add(LSTM(units=64)) 
+		
+	#FC
+	model.add(Dense(units=num_classes,activation='softmax'))
+
+	#Model compilation	
+	model.compile(optimizer='adam',loss='categorical_crossentropy',metrics=['categorical_accuracy'])
+	
+	return model
