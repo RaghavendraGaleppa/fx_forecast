@@ -7,7 +7,7 @@ import numpy as np
 
 def load_model_from_checkpoint(checkpoint_path):
     model = None
-    model_config = checkpoint_path.split('/')[-1].split('_')
+    model_config = checkpoint_path.split('.')[0].split('/')[-1].split('_')
     model_name = model_config[0]
     window_size = int(model_config[1])
     label_size = int(model_config[2])
