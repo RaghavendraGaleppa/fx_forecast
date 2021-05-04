@@ -178,5 +178,5 @@ def cnn_lstm_model(input_shape, num_classes=2):
     model.add(Dense(units=num_classes,activation='softmax'))
 
     #Model compilation	
-    model.compile(optimizer='adam',loss='categorical_crossentropy',metrics=['loss', 'categorical_accuracy'])
+    model.compile(optimizer='adam',loss='categorical_crossentropy',metrics=['accuracy'])
     return model
