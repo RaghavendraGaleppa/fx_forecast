@@ -146,23 +146,16 @@ def cnn_lstm_model(input_shape, num_classes=2):
 
     model.add(MaxPooling1D(pool_size = 2, strides = 2))
 
-    model.add(Conv1D(filters = 128,kernel_size = 3,strides=1,padding='same',))
-    model.add(BatchNormalization())
-    model.add(Activation('relu'))
-    model.add(Dropout(0.15))
-
-    #LFLB2
-    model.add(Conv1D(filters=128, kernel_size = 3, strides=1,padding='same'))
-    model.add(BatchNormalization())
-    model.add(Activation('relu'))
-
     model.add(LSTM(units=128, activation='relu', return_sequences=True)) 
 
     model.add(Dropout(0.15))
 
-    model.add(LSTM(units=64, activation='relu')) 
+    model.add(LSTM(units=128, activation='relu')) 
 
-    model.add(Dense(units=num_classes,activation='softmax'))
+    if num_classes > 1:
+        model.add(Dense(units=num_classes,activation='softmax'))
+    else:
+        model.add(Dense(units=num_classes))
 
     #Model compilation	
     return model
