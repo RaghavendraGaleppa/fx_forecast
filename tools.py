@@ -95,9 +95,14 @@ def build_dataset(*filenames, **kwargs):
     normalize_mode = kwargs.get('normalize_mode', 'custom')
     for filename in filenames:
         data_df = load_csv(filename, columns=['date', 'time', 'start','high','low','end','UNK'])
+        target_series = data_df.start
+        if kwargs.get('stock_data','price') is 'returns':
+            data_df['returns'] = data_df.start - data_df.end
+            target_series = data_df.returns
+
         if normalize_mode == 'custom':
             price_data , price_labels = create_dataset_custom_scaler(
-                        series=data_df.start,
+                        series=target_series,
                         window_size=kwargs.get('window_size', 7),
                         hop_size=kwargs.get('hop_size',1),
                         label_size=kwargs.get('label_size',1),
@@ -106,7 +111,7 @@ def build_dataset(*filenames, **kwargs):
                     )
         elif normalize_mode == 'full':
             price_data , price_labels = create_dataset(
-                        series=data_df.start,
+                        series=target_series,
                         window_size=kwargs.get('window_size', 7),
                         hop_size=kwargs.get('hop_size',1),
                         label_size=kwargs.get('label_size',1),
