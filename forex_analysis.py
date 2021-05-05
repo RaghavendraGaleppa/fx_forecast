@@ -157,9 +157,9 @@ class DataStream():
             else:
                 self.logger.debug("Regression Prediction")
                 if self.predictions_made[0,0] > self.normalized_data.reshape(-1)[-1]:
-                    pred_label = 1
-                else:
                     pred_label = 0
+                else:
+                    pred_label = 1
                 self.logger.info(f"{self.raw_data_queue}")
                 self.logger.info(f"({self.normalized_data.reshape(-1)[-1]}, {self.predictions_made[0,0]})")
 
