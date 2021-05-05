@@ -21,6 +21,10 @@ def load_model_from_checkpoint(checkpoint_path):
         if model_name == "LSTMModel":
             model = lstm_model((window_size, 1))
             model.load_weights(checkpoint_path).expect_partial()
+
+        if model_name == "TCNModel":
+            model = tcn_model((window_size,1), label_size)
+            model.load_weights(checkpoint_path)
     else:
         model_type = 'torch'
 
@@ -128,7 +132,18 @@ from keras.callbacks import EarlyStopping
 from keras.callbacks import ModelCheckpoint
 from keras.layers import Input,Conv1D,BatchNormalization,MaxPooling1D,LSTM,Dense,Activation,Layer, Dropout, Flatten
 import tensorflow as tf
+from tcn import TCN, tcn_full_summary
 
+def tcn_model(input_shape, label_size=1):
+    tcn_layer = TCN(input_shape=input_shape)
+    print('Receptive Field Size=', tcn_layer.receptive_field)
+
+    m = Sequential([
+        tcn_layer,
+        Dense(label_size),
+    ])
+
+    return m
 
 def cnn_lstm_model(input_shape, num_classes=2):
     model = Sequential()
