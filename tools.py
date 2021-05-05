@@ -54,7 +54,8 @@ def create_dataset_custom_scaler(
         hop_size=1, 
         label_size=1, 
         to_categorical=True,
-        normalize_values=True
+        normalize_values=True,
+        stock_data='price'
 ):
     series = series.iloc[list(range(0,len(series),hop_size))]
     new_data_df = pd.DataFrame(series)
@@ -72,18 +73,22 @@ def create_dataset_custom_scaler(
             scaler = MinMaxScaler(feature_range=custom_feature_range)
             std_scaler = StandardScaler()
             prices = scaler.fit_transform(prices.reshape(-1,1))
-            #prices = std_scaler.fit_transform(prices)
+            prices = std_scaler.fit_transform(prices)
             next_price = scaler.transform([[next_price]])
-            #next_price = std_scaler.transform(next_price)
+            next_price = std_scaler.transform(next_price)
             next_price = next_price[0,0]
-        else:
-            prices = prices.reshape(-1,1)
 
-        # Convert the data to categorical based on the args
-        if to_categorical is True:
-            next_price = np.argmax([next_price, prices.reshape(-1)[-1]])
+        if stock_data == 'price':
+            # Convert the data to categorical based on the args
+            if to_categorical is True:
+                next_price = np.argmax([next_price, prices.reshape(-1)[-1]])
+        elif stock_data == 'returns':
+            if next_price < 0:
+                next_price = 0
+            else:
+                next_price = 1
 
-        price_data.append(prices)
+        price_data.append(prices.reshape(-1))
         price_labels.append(next_price)
 
     return np.array(price_data), np.array(price_labels)
@@ -107,7 +112,8 @@ def build_dataset(*filenames, **kwargs):
                         hop_size=kwargs.get('hop_size',1),
                         label_size=kwargs.get('label_size',1),
                         to_categorical=kwargs.get('to_categorical',True),
-                        normalize_values=kwargs.get('normalize_values',True)
+                        normalize_values=kwargs.get('normalize_values',True),
+                        stock_data=kwargs.get('stock_data','price')
                     )
         elif normalize_mode == 'full':
             price_data , price_labels = create_dataset(
