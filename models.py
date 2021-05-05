@@ -193,9 +193,8 @@ def residual_cnn(input_shape):
 
 def linear_model(input_shape):
     model = Sequential()
-
     model.add(Flatten(input_shape=input_shape))
-    model.add(Dense(128, activation='tanh'))
-    model.add(Dense(128, activation='tanh'))
+    model.add(Dense(128, activation='relu'))
+    model.add(Dense(128, activation='relu'))
     model.add(Dense(1))
     return model
