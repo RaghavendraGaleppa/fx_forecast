@@ -169,7 +169,7 @@ class DataStream():
 
             start_idx, end_idx, min_len = 1, len(self.actual_prices), 2
             if self.fill_raw_data_queue is True:
-                start_idx, end_idx, min_len = self.window_size: len(self.actual_prices), self.window_size + 1
+                start_idx, end_idx, min_len = self.window_size, len(self.actual_prices), self.window_size + 1
 
             if len(self.actual_prices) >= min_len:
                 acc = accuracy_score(
