@@ -63,15 +63,15 @@ def create_dataset_custom_scaler(
     price_labels = []
     for i in tqdm(range(0, len(new_data_df)-window_size-1)):
         # Choos the sequence of values
-        prices = new_data_df.start.iloc[i:i+window_size+1].values.reshape(-1)
+        prices = new_data_df.start.iloc[i:i+window_size].values.reshape(-1)
+        next_price = new_data_df.start.iloc[i+window_size]
 
         # Normalize the values based on the args
         if normalize_values is True:
-            min_scale = np.random.uniform(0.05, 0.2, size=(1,))[0]
-            max_scale = np.random.uniform(0.8, 0.95, size=(1,))[0]
             custom_feature_range = (0.1, 0.9)
             scaler = MinMaxScaler(feature_range=custom_feature_range)
             prices = scaler.fit_transform(prices.reshape(-1,1))
+            next_price = scaler.transform([[next_price]])
         else:
             prices = prices.reshape(-1,1)
 
@@ -81,7 +81,7 @@ def create_dataset_custom_scaler(
         else:
             next_price = prices.reshape(-1)[-1]
 
-        price_data.append(prices[:-1])
+        price_data.append(prices)
         price_labels.append(next_price)
 
     return np.array(price_data), np.array(price_labels)
