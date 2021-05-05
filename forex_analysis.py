@@ -163,7 +163,8 @@ class DataStream():
             self.predicted_prices.append(pred_label)
             self.actual_prices.append(actual_label)
 
-            self.logger.debug(f"Inp: {self.normalized_data.reshape(-1)}")
+            self.logger.debug(f"Raw Prices: {self.raw_data_queue}")
+            self.logger.debug(f"Normalized Prices: {self.normalized_data.reshape(-1)}")
             self.logger.debug(f"Movement: {self.prediction_labels[pred_label]}")
 
             if len(self.actual_prices) >= 2:
@@ -172,24 +173,6 @@ class DataStream():
                                     f" {len(self.actual_prices)} "
                                     f" till now: {acc}")
 
-    def calculate_accuracy(self):
-        if len(self.predicted_prices) > 1:
-            y_pred = []
-            y_true = []
-            for i in range(0, len(self.predicted_prices)-1):
-                if self.predicted_prices[i] > self.actual_prices[i]:
-                    y_pred.append(0)
-                else:
-                    y_pred.append(1)
-
-                if self.actual_prices[i+1] > self.actual_prices[i]:
-                    y_true.append(0)
-                else:
-                    y_true.append(1)
-            accuracy = accuracy_score(y_true=y_true, y_pred=y_pred)
-            self.logger.debug(f"Accuracte predictions for"
-                                f" {len(self.predicted_prices)} "
-                                f" till now: {accuracy}")
 
     def start(self, time_interval=60, fill_raw_data_queue=True):
         """ Reinitialize the queue everytime this system is started """
