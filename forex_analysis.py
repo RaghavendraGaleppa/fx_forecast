@@ -34,6 +34,7 @@ class ForexDataSimulation():
 
     def __init__(self, path_to_csv, hop_size=1):
         self.df = pd.DataFrame({'start':load_csv(path_to_csv).start.values[::hop_size]})
+        print(f"Simulation Data size: {self.df.shape}")
         self.idx = 0
 
     def reset(self):
@@ -166,8 +167,8 @@ class DataStream():
 
             actual_label = np.argmax(list(self.raw_data_queue)[::-1][:2])
 
-            #if len(self.predicted_prices) == 0:
-            #    self.predicted_prices.append(0)
+            if len(self.predicted_prices) == 0:
+                self.predicted_prices.append(0)
             self.predicted_prices.append(pred_label)
             self.actual_prices.append(actual_label)
 
