@@ -20,7 +20,7 @@ def load_model_from_checkpoint(checkpoint_path):
 
         if model_name == "LSTMModel":
             model = lstm_model((window_size, 1))
-            model.load_weights(checkpoint_path).expect_partial()
+            model.load_weights(checkpoint_path)
 
         if model_name == "TCNModel":
             model = tcn_model((window_size,1), label_size)
