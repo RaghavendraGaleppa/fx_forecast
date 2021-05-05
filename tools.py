@@ -81,8 +81,8 @@ def create_dataset_custom_scaler(
 
         price_data.append(prices)
         price_labels.append(next_price)
-    print(np.array(price_data.shape))
-    print(np.array(price_labels.shape))
+    print(np.array(price_data).shape)
+    print(np.array(price_labels).shape)
 
     return np.array(price_data), np.array(price_labels)
 
