@@ -58,7 +58,7 @@ def create_dataset_custom_scaler(
         stock_data='price'
 ):
     series = series.iloc[list(range(0,len(series),hop_size))]
-    new_data_df = pd.DataFrame(series)
+    new_data_df = pd.DataFrame({'start':series})
     new_data_df['labels'] = new_data_df.shift(-window_size)
     price_data = []
     price_labels = []
