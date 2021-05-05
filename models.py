@@ -127,6 +127,7 @@ import keras.backend as K
 from keras.callbacks import EarlyStopping
 from keras.callbacks import ModelCheckpoint
 from keras.layers import Input,Conv1D,BatchNormalization,MaxPooling1D,LSTM,Dense,Activation,Layer, Dropout, Flatten
+import tensorflow as tf
 
 
 def cnn_lstm_model(input_shape, num_classes=2):
@@ -167,10 +168,9 @@ def cnn_lstm_model(input_shape, num_classes=2):
     return model
 
 def lstm_model(input_shape):
-    model = Sequential()
-    model.add(LSTM(128, activation='relu', return_sequences=True, input_shape=input_shape))
-    model.add(Dropout(0.1))
-    model.add(LSTM(128, activation='relu'))
-    model.add(Dense(1))
-
-    return model
+    model = tf.keras.models.Sequential()
+    model.add(tf.keras.layers.LSTM(128, activation='relu', return_sequences=True, input_shape=input_shape))
+    model.add(tf.keras.layers.Dropout(0.15))
+    model.add(tf.keras.layers.LSTM(128, activation='relu'))
+    model.add(tf.keras.layers.Dense(1))
+    return  model
