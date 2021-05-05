@@ -157,7 +157,7 @@ class DataStream():
             else:
                 raw_predicted_price = scaler.inverse_transform(self.predictions_made.reshape(-1,1))
                 self.previous_prices.append(raw_predicted_price)
-                pred_label = np.argmax([raw_predicted_price[0,0], self.raw_data_queue[-1]])
+                pred_label = np.argmax([raw_predicted_price[0,0], self.raw_data_queue[-1]][::-1][:2])
                 #if len(self.previous_prices) >= 2:
                 #    pred_label = np.argmax(self.previous_prices[::-1][:2])
                 #    self.logger.debug(f"Previous Prices: self.previous_prices[::-1][:2]")
