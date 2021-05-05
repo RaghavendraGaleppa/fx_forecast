@@ -18,6 +18,36 @@ def load_csv(filename, columns=['date', 'time', 'start','high','low','end','UNK'
 
     return df
 
+def create_dataset(
+        series, 
+        window_size=5, 
+        hop_size=1, 
+        label_size=1, 
+        to_categorical=True,
+):
+    series = series.iloc[list(range(0,len(series),hop_size))]
+    scaler = MinMaxScaler(feature_range=(0.1,0.9))
+    new_data_df = pd.DataFrame({'start':scaler.fit_transform(series.values.reshape(-1,1)).reshape(-1)})
+    new_data_df['labels'] = new_data_df.start.shift(-window_size)
+    price_data = []
+    price_labels = []
+    for i in tqdm(range(0, len(new_data_df)-window_size-1)):
+        # Choos the sequence of values
+        prices = new_data_df.start.iloc[i:i+window_size+1].values.reshape(-1)
+
+        # Convert the data to categorical based on the args
+        if to_categorical is True:
+            next_price = np.argmax(prices.reshape(-1)[::-1][:2])
+        else:
+            next_price = prices.reshape(-1)[-1]
+
+        price_data.append(prices[:-1])
+        price_labels.append(next_price)
+
+    return np.array(price_data), np.array(price_labels)
+
+
+
 def create_dataset_custom_scaler(
         series, 
         window_size=5, 
@@ -27,7 +57,7 @@ def create_dataset_custom_scaler(
         normalize_values=True
 ):
     series = series.iloc[list(range(0,len(series),hop_size))]
-    new_data_df = pd.DataFrame(series)
+    new_data_df = pd.dataframe(series)
     new_data_df['labels'] = new_data_df.shift(-window_size)
     price_data = []
     price_labels = []
@@ -60,16 +90,26 @@ def create_dataset_custom_scaler(
 def build_dataset(*filenames, **kwargs):
     price_data_list = []
     price_labels_list = []
+    normalize_mode = kwargs.get('normalize_mode', 'custom')
     for filename in filenames:
         data_df = load_csv(filename, columns=['date', 'time', 'start','high','low','end','UNK'])
-        price_data , price_labels = create_dataset_custom_scaler(
-                    series=data_df.start,
-                    window_size=kwargs.get('window_size', 7),
-                    hop_size=kwargs.get('hop_size',1),
-                    label_size=kwargs.get('label_size',1),
-                    to_categorical=kwargs.get('to_categorical',True),
-                    normalize_values=kwargs.get('normalize_values',True)
-                )
+        if normalize_mode == 'custom':
+            price_data , price_labels = create_dataset_custom_scaler(
+                        series=data_df.start,
+                        window_size=kwargs.get('window_size', 7),
+                        hop_size=kwargs.get('hop_size',1),
+                        label_size=kwargs.get('label_size',1),
+                        to_categorical=kwargs.get('to_categorical',True),
+                        normalize_values=kwargs.get('normalize_values',True)
+                    )
+        elif normalize_mode == 'full':
+            price_data , price_labels = create_dataset(
+                        series=data_df.start,
+                        window_size=kwargs.get('window_size', 7),
+                        hop_size=kwargs.get('hop_size',1),
+                        label_size=kwargs.get('label_size',1),
+                        to_categorical=kwargs.get('to_categorical',True),
+                    )
         price_data_list.append(price_data)
         price_labels_list.append(price_labels)
 
