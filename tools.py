@@ -71,7 +71,7 @@ def create_dataset_custom_scaler(
             custom_feature_range = (0.1, 0.9)
             scaler = MinMaxScaler(feature_range=custom_feature_range)
             prices = scaler.fit_transform(prices.reshape(-1,1))
-            next_price = scaler.transform([[next_price]])
+            next_price = scaler.transform([[next_price]])[0,0]
         else:
             prices = prices.reshape(-1,1)
 
@@ -81,8 +81,6 @@ def create_dataset_custom_scaler(
 
         price_data.append(prices)
         price_labels.append(next_price)
-    print(np.array(price_data).shape)
-    print(np.array(price_labels).shape)
 
     return np.array(price_data), np.array(price_labels)
 
