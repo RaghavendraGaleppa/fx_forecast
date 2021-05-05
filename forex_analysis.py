@@ -168,8 +168,8 @@ class DataStream():
             else:
                 actual_label = 0
 
-            #if len(self.predicted_prices) == 0:
-            #    self.predicted_prices.append(0)
+            if len(self.predicted_prices) == 0:
+                self.predicted_prices.append(0)
 
             self.predicted_prices.append(pred_label)
             self.actual_prices.append(actual_label)
@@ -182,6 +182,7 @@ class DataStream():
             if self.fill_raw_data_queue is True:
                 start_idx, end_idx, min_len = self.window_size, len(self.actual_prices), self.window_size + 1
 
+            self.logger.debug(f"idxs: {start_idx}, {end_idx}, {min_len}")
             if len(self.actual_prices) >= min_len:
                 acc = accuracy_score(
                         y_true=self.actual_prices[start_idx:], 
