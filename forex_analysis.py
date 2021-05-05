@@ -160,7 +160,7 @@ class DataStream():
                     pred_label = 1
                 else:
                     pred_label = 0
-                self.logge.info(f"Prediction Made: {self.predictions_made[0,0]}")
+                self.logger.info(f"Prediction Made: {self.predictions_made[0,0]}")
 
             if self.raw_data_queue[-1] > self.raw_data_queue[-2]:
                 actual_label = 1
