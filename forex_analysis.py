@@ -191,9 +191,12 @@ class DataStream():
                                 f" {len(self.predicted_prices)} "
                                 f" till now: {accuracy}")
 
-    def start(self, time_interval=60):
+    def start(self, time_interval=60, fill_raw_data_queue=True):
         """ Reinitialize the queue everytime this system is started """
         self.raw_data_queue = deque(maxlen=self.window_size)
+        if fill_raw_data_queue is True:
+            for i in range(self.window_size):
+                self.raw_data_queue.append(0)
         self.last_timestamp = None
         self.data_updated_flag = 0
     
