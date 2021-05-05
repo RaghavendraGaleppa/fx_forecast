@@ -146,7 +146,7 @@ def tcn_model(input_shape, label_size=1):
     Dense(label_size, activation='linear')
     ])
 
-    return m
+    return model
 
 def cnn_lstm_model(input_shape, num_classes=2):
     model = Sequential()
