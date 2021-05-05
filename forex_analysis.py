@@ -81,7 +81,7 @@ class DataStream():
         """ model predictions """
         self.predicted_prices = []
         self.actual_prices = []
-        self.prediction_labels = ['UP', 'DOWN']
+        self.prediction_labels = ['DOWN', 'UP']
         self.previous_prices = []
 
 
@@ -155,18 +155,18 @@ class DataStream():
 
             else:
                 raw_predicted_price = scaler.inverse_transform(self.predictions_made.reshape(-1,1))
-                if raw_predicted_price > price_data['final_price']:
-                    pred_label = 0
-                else:
+                if self.predictions_made.reshape(-1)[0] > self.normalized_data.reshape(-1)[-1]:
                     pred_label = 1
+                else:
+                    pred_label = 0
                 self.previous_prices.append(raw_predicted_price)
 
                 self.logger.debug(f"Predicted Price: {raw_predicted_price[0,0]}, Last Price: {self.raw_data_queue[-1]}")
 
             if self.raw_data_queue[-1] > self.raw_data_queue[-2]:
-                actual_label = 0
-            else:
                 actual_label = 1
+            else:
+                actual_label = 0
 
             if len(self.predicted_prices) == 0:
                 self.predicted_prices.append(0)
