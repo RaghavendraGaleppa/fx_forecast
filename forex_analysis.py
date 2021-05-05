@@ -168,8 +168,8 @@ class DataStream():
 
             actual_label = np.argmax(list(self.raw_data_queue)[::-1][:2])
 
-            if len(self.predicted_prices) == 0:
-                self.predicted_prices.append(0)
+            #if len(self.predicted_prices) == 0:
+            #    self.predicted_prices.append(0)
             self.predicted_prices.append(pred_label)
             self.actual_prices.append(actual_label)
 
