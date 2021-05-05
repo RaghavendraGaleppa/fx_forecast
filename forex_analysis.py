@@ -188,7 +188,7 @@ class DataStream():
                         y_pred=self.predicted_prices[start_idx:end_idx]
                 )
                 self.logger.info(
-                        f"Accuracte keras predictions for"
+                        f"Accuracy predictions for"
                         f" {len(self.actual_prices[start_idx:])} "
                         f" till now: {acc}"
                 )
