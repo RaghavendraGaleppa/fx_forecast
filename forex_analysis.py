@@ -164,9 +164,9 @@ class DataStream():
                 self.logger.info(f"({self.normalized_data.reshape(-1)[-1]}, {self.predictions_made[0,0]})")
 
             if self.raw_data_queue[-1] > self.raw_data_queue[-2]:
-                actual_label = 1
-            else:
                 actual_label = 0
+            else:
+                actual_label = 1
 
             if len(self.predicted_prices) == 0:
                 self.predicted_prices.append(0)

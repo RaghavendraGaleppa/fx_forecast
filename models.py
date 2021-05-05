@@ -184,9 +184,7 @@ def cnn_lstm_model(input_shape, num_classes=2):
 
 def lstm_model(input_shape):
     model = tf.keras.models.Sequential()
-    model.add(tf.keras.layers.LSTM(128, activation='relu', return_sequences=True, input_shape=input_shape))
-    model.add(tf.keras.layers.Dropout(0.15))
-    model.add(tf.keras.layers.LSTM(128, activation='relu'))
+    model.add(tf.keras.layers.LSTM(128, input_shape=input_shape))
     model.add(tf.keras.layers.Dense(1))
     return  model
 
