@@ -32,10 +32,8 @@ def get_eur_usd_price_data():
 
 class ForexDataSimulation():
 
-    def __init__(self, path_to_csv, window_size, label_size):
-        self.df = load_csv(path_to_csv)
-        self.window_size = window_size
-        self.label_size = label_size
+    def __init__(self, path_to_csv, hop_size=1):
+        self.df = pd.DataFrame({'start':load_csv(path_to_csv).start.values[::hop_size]})
         self.idx = 0
 
     def reset(self):
