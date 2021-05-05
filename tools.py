@@ -4,7 +4,7 @@ import pandas as pd
 
 
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
 
 from tqdm import tqdm
 
@@ -70,8 +70,11 @@ def create_dataset_custom_scaler(
         if normalize_values is True:
             custom_feature_range = (0.1, 0.9)
             scaler = MinMaxScaler(feature_range=custom_feature_range)
+            std_scaler = StandardScaler()
             prices = scaler.fit_transform(prices.reshape(-1,1))
-            next_price = scaler.transform([[next_price]])[0,0]
+            prices = std_scaler.fit_transform(prices)
+            next_price = scaler.transform([[next_price]])
+            next_price = std_scaler.transform([[next_price]])[0,0]
         else:
             prices = prices.reshape(-1,1)
 

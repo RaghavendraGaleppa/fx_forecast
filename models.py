@@ -185,3 +185,7 @@ def lstm_model(input_shape):
     model.add(tf.keras.layers.LSTM(128, activation='relu'))
     model.add(tf.keras.layers.Dense(1))
     return  model
+
+def residual_cnn(input_shape):
+    model = tf.keras.models.Sequential()
+
