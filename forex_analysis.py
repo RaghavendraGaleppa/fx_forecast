@@ -150,18 +150,17 @@ class DataStream():
 
             """ Handle categorical and regressional predictions """
             if self.categorical is True:
+                self.logger.debug("Categorical Prediction")
                 pred_label = np.argmax(self.predictions_made.reshape(-1))
                 self.logger.debug(f"Predictions made: {self.predictions_made.reshape(-1)}")
 
             else:
-                raw_predicted_price = scaler.inverse_transform(self.predictions_made.reshape(-1,1))
-                if self.predictions_made.reshape(-1)[0] > self.normalized_data.reshape(-1)[-1]:
+                self.logger.debug("Regression Prediction")
+                if self.predictions_made[0,0] > self.normalized_data.reshape(-1)[-1]:
                     pred_label = 1
                 else:
                     pred_label = 0
-                self.previous_prices.append(raw_predicted_price)
-
-                self.logger.debug(f"Predicted Price: {raw_predicted_price[0,0]}, Last Price: {self.raw_data_queue[-1]}")
+                self.logge.info(f"Prediction Made: {self.predictions_made[0,0]}")
 
             if self.raw_data_queue[-1] > self.raw_data_queue[-2]:
                 actual_label = 1
