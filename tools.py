@@ -77,9 +77,7 @@ def create_dataset_custom_scaler(
 
         # Convert the data to categorical based on the args
         if to_categorical is True:
-            next_price = np.argmax(prices.reshape(-1)[::-1][:2])
-        else:
-            next_price = prices.reshape(-1)[-1]
+            next_price = np.argmax([next_price, prices.reshape(-1)[-1])
 
         price_data.append(prices)
         price_labels.append(next_price)
