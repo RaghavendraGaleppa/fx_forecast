@@ -48,7 +48,7 @@ class ForexDataSimulation():
         return data
      
 class DataStream():
-    def __init__(self, model_checkpoint_path, simulation=None, categorical=False):
+    def __init__(self, model_checkpoint_path, simulation=None, categorical=False, logging_level=None):
 
 
         self.model, self.window_size, self.label_size, self.model_type = load_model_from_checkpoint(
@@ -69,7 +69,9 @@ class DataStream():
 
         """ setup the logger """
         self.logger = logging.getLogger(__name__)
-        self.logger.setLevel(logging.DEBUG)
+        if logging_level is None:
+            logging_level = logging.DEBUG
+        self.logger.setLevel(logging_level)
         sys.stdout.flush()
         if not self.logger.handlers:
             stdout_handler = logging.StreamHandler(sys.stdout)
@@ -176,7 +178,7 @@ class DataStream():
                         y_true=self.actual_prices[start_idx:], 
                         y_pred=self.predicted_prices[start_idx:end_idx]
                 )
-                self.logger.debug(
+                self.logger.info(
                         f"Accuracte keras predictions for"
                         f" {len(self.actual_prices[start_idx:])} "
                         f" till now: {acc}"
