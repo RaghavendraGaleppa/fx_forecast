@@ -25,6 +25,10 @@ def load_model_from_checkpoint(checkpoint_path):
         if model_name == "TCNModel":
             model = tcn_model((window_size,1), label_size)
             model.load_weights(checkpoint_path)
+
+        if model_name == 'LinearModel':
+            model = linear_model((window_size,1))
+            model.load_weights(checkpoint_path)
     else:
         model_type = 'torch'
 
@@ -189,3 +193,11 @@ def lstm_model(input_shape):
 def residual_cnn(input_shape):
     model = tf.keras.models.Sequential()
 
+def linear_model(input_shape):
+    model = Sequential()
+
+    model.add(Flatten(input_shape=input_shape))
+    model.add(Dense(128, activation='tanh'))
+    model.add(Dense(128, activation='tanh'))
+    model.add(Dense(1))
+    return model
