@@ -74,7 +74,7 @@ def create_dataset_custom_scaler(
             prices = scaler.fit_transform(prices.reshape(-1,1))
             prices = std_scaler.fit_transform(prices)
             next_price = scaler.transform([[next_price]])
-            next_price = std_scaler.transform([[next_price]])[0,0]
+            next_price = std_scaler.transform(next_price)[0,0]
         else:
             prices = prices.reshape(-1,1)
 
