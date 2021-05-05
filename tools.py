@@ -67,7 +67,7 @@ def build_dataset(*filenames, **kwargs):
                     window_size=kwargs.get('window_size', 7),
                     hop_size=kwargs.get('hop_size',1),
                     label_size=kwargs.get('label_size',1),
-                    to_categorical=kwargs.get('to_categorical',True)
+                    to_categorical=kwargs.get('to_categorical',True),
                     normalize_values=kwargs.get('normalize_values',True)
                 )
         price_data_list.append(price_data)
