@@ -135,12 +135,15 @@ import tensorflow as tf
 from tcn import TCN, tcn_full_summary
 
 def tcn_model(input_shape, label_size=1):
-    tcn_layer = TCN(input_shape=input_shape)
-    print('Receptive Field Size=', tcn_layer.receptive_field)
-
-    m = Sequential([
-        tcn_layer,
-        Dense(label_size),
+    model = Sequential([
+    TCN(input_shape=input_shape,
+        kernel_size=2,
+        use_skip_connections=False,
+        use_batch_norm=False,
+        use_weight_norm=False,
+        use_layer_norm=False
+        ),
+    Dense(label_size, activation='linear')
     ])
 
     return m
