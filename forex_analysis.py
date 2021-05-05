@@ -168,8 +168,8 @@ class DataStream():
             else:
                 actual_label = 0
 
-            if len(self.predicted_prices) == 0:
-                self.predicted_prices.append(0)
+            #if len(self.predicted_prices) == 0:
+            #    self.predicted_prices.append(0)
 
             self.predicted_prices.append(pred_label)
             self.actual_prices.append(actual_label)
