@@ -17,6 +17,10 @@ def load_model_from_checkpoint(checkpoint_path):
         if model_name == 'CNNLSTMModel':
             model = cnn_lstm_model((window_size,1))
             model.load_weights(checkpoint_path)
+
+        if model_name == "LSTMModel":
+            model = lstm_model((window_size, 1))
+            model.load_weights(checkpoint_path)
     else:
         model_type = 'torch'
 
@@ -122,11 +126,10 @@ from keras.utils import to_categorical
 import keras.backend as K
 from keras.callbacks import EarlyStopping
 from keras.callbacks import ModelCheckpoint
-from keras.layers import Input,Conv1D,BatchNormalization,MaxPooling1D,LSTM,Dense,Activation,Layer, Dropout
+from keras.layers import Input,Conv1D,BatchNormalization,MaxPooling1D,LSTM,Dense,Activation,Layer, Dropout, Flatten
 
 
 def cnn_lstm_model(input_shape, num_classes=2):
-
     model = Sequential()
 
     model.add(Conv1D(filters = 64,kernel_size = 3,strides=1,padding='same', input_shape=input_shape))	
@@ -161,4 +164,13 @@ def cnn_lstm_model(input_shape, num_classes=2):
     model.add(Dense(units=num_classes,activation='softmax'))
 
     #Model compilation	
+    return model
+
+def lstm_model(input_shape):
+    model = Sequential()
+    model.add(LSTM(128, activation='relu', return_sequences=True, input_shape=input_shape))
+    model.add(Dropout(0.1))
+    model.add(LSTM(128, activation='relu'))
+    model.add(Dense(1))
+
     return model
