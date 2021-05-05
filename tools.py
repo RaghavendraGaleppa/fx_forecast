@@ -64,7 +64,7 @@ def create_dataset_custom_scaler(
     for i in tqdm(range(0, len(new_data_df)-window_size-1)):
         # Choos the sequence of values
         prices = new_data_df.start.iloc[i:i+window_size].values.reshape(-1)
-        next_price = new_data_df.start.iloc[i+window_size]
+        next_price = new_data_df.start.iloc[i+window_size+1]
 
         # Normalize the values based on the args
         if normalize_values is True:
