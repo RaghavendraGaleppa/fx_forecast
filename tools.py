@@ -44,7 +44,7 @@ def create_dataset(
         price_data.append(prices[:-1])
         price_labels.append(next_price)
 
-    return np.expand_dims(np.array(price_data),1), np.array(price_labels)
+    return np.expand_dims(np.array(price_data),-1), np.array(price_labels)
 
 
 
