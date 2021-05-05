@@ -47,15 +47,9 @@ def create_dataset_custom_scaler(
 
         # Convert the data to categorical based on the args
         if to_categorical is True:
-            if prices.reshape(-1)[-1] > prices.reshape(-1)[-2]:
-                next_price = 0
-            else:
-                next_price = 1
+            next_price = np.argmax(prices.reshape(-1)[::-1][:2])
         else:
-            if label_size == 1:
-                next_price = prices.reshape(-1)[-1]
-            else:
-                next_price = new_data_df.labels.iloc[i:i+label_size]
+            next_price = prices.reshape(-1)[-1]
 
         price_data.append(prices[:-1])
         price_labels.append(next_price)
@@ -72,7 +66,9 @@ def build_dataset(*filenames, **kwargs):
                     series=data_df.start,
                     window_size=kwargs.get('window_size', 7),
                     hop_size=kwargs.get('hop_size',1),
-                    label_size=kwargs.get('label_size',1)
+                    label_size=kwargs.get('label_size',1),
+                    to_categorical=kwargs.get('to_categorical',True)
+                    normalize_values=kwargs.get('normalize_values',True)
                 )
         price_data_list.append(price_data)
         price_labels_list.append(price_labels)
