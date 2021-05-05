@@ -167,16 +167,26 @@ class DataStream():
             self.logger.debug(f"Normalized Prices: {self.normalized_data.reshape(-1)}")
             self.logger.debug(f"Movement: {self.prediction_labels[pred_label]}")
 
-            if len(self.actual_prices) >= 2:
-                acc = accuracy_score(y_true=self.actual_prices[1:], y_pred=self.predicted_prices[1:len(self.actual_prices)])
-                self.logger.debug(f"Accuracte keras predictions for"
-                                    f" {len(self.actual_prices)} "
-                                    f" till now: {acc}")
+            start_idx, end_idx, min_len = 1, len(self.actual_prices), 2
+            if self.fill_raw_data_queue is True:
+                start_idx, end_idx, min_len = self.window_size: len(self.actual_prices), self.window_size + 1
+
+            if len(self.actual_prices) >= min_len:
+                acc = accuracy_score(
+                        y_true=self.actual_prices[start_idx:], 
+                        y_pred=self.predicted_prices[start_idx:end_idx]
+                )
+                self.logger.debug(
+                        f"Accuracte keras predictions for"
+                        f" {len(self.actual_prices[start_idx:])} "
+                        f" till now: {acc}"
+                )
 
 
     def start(self, time_interval=60, fill_raw_data_queue=True):
         """ Reinitialize the queue everytime this system is started """
         self.raw_data_queue = deque(maxlen=self.window_size)
+        self.fill_raw_data_queue = fill_raw_data_queue
         if fill_raw_data_queue is True:
             for i in range(self.window_size):
                 self.raw_data_queue.append(0)
